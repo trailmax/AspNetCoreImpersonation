@@ -1,0 +1,24 @@
+﻿@using CoreImpersonation.Models;
+@model IEnumerable<ApplicationUser>
+
+<h1>List of Users</h1>
+
+<table class="table table-striped table-bordered">
+    <tr>
+        <th width="200"></th>
+        <th>Username</th>
+        <th>Email</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("Impersonate", "ImpersonateUser", new { UserId = @user.Id })
+            </td>
+            <td>
+                @user.UserName
+            </td>
+            <td>@user.Email</td>
+        </tr>
+    }
+</table>

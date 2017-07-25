@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>User Impersonation</h1>
+    <p>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div>Current user is @User.Identity.Name</div>
+        }
+        else
+        {
+            <div>User is not authenticated</div>
+        }
+    </p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Impersonation</h2>
+        <ul>
+            <li>@Html.ActionLink("List of Users", "ListOfUsers", "Impersonation")</li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>Application uses</h2>
+    </div>
+    <div class="col-md-4">
+        <h2>How to</h2>
+    </div>
+</div>
