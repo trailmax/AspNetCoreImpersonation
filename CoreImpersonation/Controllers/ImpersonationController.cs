@@ -43,7 +43,7 @@ namespace CoreImpersonation.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Admin"] // <-- Make sure only admins can access this 
         public async Task<IActionResult> ImpersonateUser(String userId)
         {
             var currentUserId = User.GetUserId();
@@ -54,7 +54,7 @@ namespace CoreImpersonation.Controllers
 
             userPrincipal.Identities.First().AddClaim(new Claim("OriginalUserId", currentUserId));
             userPrincipal.Identities.First().AddClaim(new Claim("IsImpersonating", "true"));
-            
+
             // sign out the current user
             await _signInManager.SignOutAsync();
 
@@ -64,7 +64,7 @@ namespace CoreImpersonation.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Admin"] // <-- Make sure only admins can access this 
         public async Task<IActionResult> StopImpersonation()
         {
             if (!User.IsImpersonating())
