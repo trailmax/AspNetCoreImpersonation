@@ -43,7 +43,7 @@ namespace CoreImpersonation.Controllers
         }
 
 
-        [Authorize(Roles = "Admin"] // <-- Make sure only admins can access this 
+        //[Authorize(Roles = "Admin")] // <-- Make sure only admins can access this 
         public async Task<IActionResult> ImpersonateUser(String userId)
         {
             var currentUserId = User.GetUserId();
@@ -64,7 +64,7 @@ namespace CoreImpersonation.Controllers
         }
 
 
-        [Authorize(Roles = "Admin"] // <-- Make sure only admins can access this 
+        [Authorize]
         public async Task<IActionResult> StopImpersonation()
         {
             if (!User.IsImpersonating())

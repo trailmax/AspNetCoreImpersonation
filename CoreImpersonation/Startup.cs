@@ -54,6 +54,22 @@ namespace CoreImpersonation
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.SecurityStampValidationInterval = TimeSpan.FromMinutes(10);
+                options.OnSecurityStampRefreshingPrincipal = context =>
+                {
+                    var originalUserIdClaim = context.CurrentPrincipal.FindFirst("OriginalUserId");
+                    var isImpersonatingClaim = context.CurrentPrincipal.FindFirst("IsImpersonating");
+                    if (isImpersonatingClaim.Value == "true" && originalUserIdClaim != null)
+                    {
+                        context.NewPrincipal.Identities.First().AddClaim(originalUserIdClaim);
+                        context.NewPrincipal.Identities.First().AddClaim(isImpersonatingClaim);
+                    }
+                    return Task.FromResult(0);
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
