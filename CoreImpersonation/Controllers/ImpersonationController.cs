@@ -14,6 +14,7 @@ using CoreImpersonation.Models.AccountViewModels;
 using CoreImpersonation.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CoreImpersonation.Controllers
 {
@@ -21,16 +22,13 @@ namespace CoreImpersonation.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IdentityCookieOptions cookieOptions;
 
         public ImpersonationController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IOptions<IdentityCookieOptions> identityCookieOptions)
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            cookieOptions = identityCookieOptions.Value;
         }
 
 
@@ -58,7 +56,7 @@ namespace CoreImpersonation.Controllers
             // sign out the current user
             await _signInManager.SignOutAsync();
 
-            await HttpContext.Authentication.SignInAsync(cookieOptions.ApplicationCookieAuthenticationScheme, userPrincipal);
+            await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, userPrincipal);
 
             return RedirectToAction("Index", "Home");
         }

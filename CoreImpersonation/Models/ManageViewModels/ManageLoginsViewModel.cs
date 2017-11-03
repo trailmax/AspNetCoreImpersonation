@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CoreImpersonation.Models.ManageViewModels
 {
@@ -11,6 +12,6 @@ namespace CoreImpersonation.Models.ManageViewModels
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
 
-        public IList<AuthenticationDescription> OtherLogins { get; set; }
+        public IList<AuthenticationScheme> OtherLogins { get; set; }
     }
 }

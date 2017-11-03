@@ -19,24 +19,13 @@ namespace CoreImpersonation
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets<Startup>();
-            }
-
-            builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -46,19 +35,22 @@ namespace CoreImpersonation
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/LogIn");
 
             services.AddMvc();
+            services.AddApplicationInsightsTelemetry(Configuration);
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-            services.Configure<IdentityOptions>(options =>
+            services.Configure<SecurityStampValidatorOptions>(options =>
             {
-                options.SecurityStampValidationInterval = TimeSpan.FromMinutes(10);
-                options.OnSecurityStampRefreshingPrincipal = context =>
+                options.ValidationInterval = TimeSpan.FromMinutes(10);
+                options.OnRefreshingPrincipal = context =>
                 {
                     var originalUserIdClaim = context.CurrentPrincipal.FindFirst("OriginalUserId");
                     var isImpersonatingClaim = context.CurrentPrincipal.FindFirst("IsImpersonating");
@@ -91,7 +83,7 @@ namespace CoreImpersonation
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
+            app.UseAuthentication();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
