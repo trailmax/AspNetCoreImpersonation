@@ -7,7 +7,7 @@ More information in blog-post: http://tech.trailmax.info/2017/07/user-impersonat
 
 # Core V1 vs V2
 
-Currently there are 2 branches in this repository corresponding to different versions of Core: (CoreV1)[https://github.com/trailmax/AspNetCoreImpersonation/tree/CoreV1] and (CoreV2)[https://github.com/trailmax/AspNetCoreImpersonation/tree/CoreV2]. 
+Currently there are 2 branches in this repository corresponding to different versions of Core: [CoreV1](https://github.com/trailmax/AspNetCoreImpersonation/tree/CoreV1) and [CoreV2](https://github.com/trailmax/AspNetCoreImpersonation/tree/CoreV2). 
 Please use code corresponding to your version of the framework. 
 
 Master branch will use the latest version of the framework, currently it is identical to Core V2.
